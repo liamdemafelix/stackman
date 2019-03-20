@@ -184,7 +184,7 @@ if ($mode == 'LAMP') { // If mode is LAMP
     // Create the PHP-FPM Template File
     $fpmTemplate = file_get_contents('templates/lamp-fpm.tmpl');
     foreach ($variables as $variable => $value) {
-        $fpmTemplate = str_replace("%{$variable}%", $value, $apacheTemplate);
+        $fpmTemplate = str_replace("%{$variable}%", $value, $fpmTemplate);
     }
 
     // Write the PHP-FPM configuration file
