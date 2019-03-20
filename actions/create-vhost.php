@@ -157,7 +157,8 @@ $variables = [
     "ssl_key" => "/etc/stackman/{$domain}-privkey.pem",
     "proxy" => $proxy,
     "mode" => $mode,
-    "php" => $php
+    "php" => $php,
+    "email" => $email
 ];
 if (strlen($aliases) > 0) {
     $variables['server_alias_line'] = "ServerAlias {$aliases}";

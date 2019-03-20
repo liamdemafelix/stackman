@@ -115,7 +115,7 @@ if ($mode == "proxy") {
 
 // Delete SSL Certificates
 exec("rm -f /etc/stackman/tmp/{$domain}-privkey.pem /etc/stackman/{$domain}-privkey.pem /etc/stackman/tmp/{$domain}-fullchain.pem /etc/stackman/{$domain}-fullchain.pem");
-// TODO: Remove SSL from Certbot
+exec("certbot delete --cert-name {$domain}");
 
 // Done
 $cli->lightGreen()->out("The virtual host {$domain} has been deleted.");
