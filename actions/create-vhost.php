@@ -155,7 +155,9 @@ $variables = [
     "fpm_socket" => $fpmSocket,
     "ssl_cert" => "/etc/stackman/{$domain}-fullchain.pem",
     "ssl_key" => "/etc/stackman/{$domain}-privkey.pem",
-    "proxy" => $proxy
+    "proxy" => $proxy,
+    "mode" => $mode,
+    "php" => $php
 ];
 if (strlen($aliases) > 0) {
     $variables['server_alias_line'] = "ServerAlias {$aliases}";
