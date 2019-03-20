@@ -92,6 +92,9 @@ sudo systemctl enable php72-php-fpm
 # Add PHP 7.2 as the system's default PHP
 sudo ln -s /opt/remi/php72/root/usr/bin/php /usr/bin/php
 
+# Install Composer
+curl -sS https://getcomposer.org/installer | sudo /usr/bin/php -- --install-dir=/usr/local/bin --filename=composer
+
 # Add to firewall rules
 sudo /bin/yum install firewalld -y
 sudo systemctl start firewalld
