@@ -46,10 +46,6 @@ echo "$(which ntpdate) -s pool.ntp.org" >> /etc/cron.daily/ntpdate
 chmod 775 /etc/cron.daily/ntpdate
 ntpdate -s pool.ntp.org
 
-# Install a recent version of PHP as your system's default interpreter
-sudo /bin/yum-config-manager --enable remi-php72
-sudo /bin/yum install php -y
-
 # Install Apache
 echo "+ Installing Apache +"
 sudo /bin/yum install httpd -y
@@ -92,6 +88,9 @@ sudo systemctl start php72-php-fpm
 sudo systemctl enable php70-php-fpm
 sudo systemctl enable php71-php-fpm
 sudo systemctl enable php72-php-fpm
+
+# Add PHP 7.2 as the system's default PHP
+sudo ln -s /opt/remi/php72/root/usr/bin/php /usr/bin/php
 
 # Add to firewall rules
 sudo /bin/yum install firewalld -y
