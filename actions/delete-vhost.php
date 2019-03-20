@@ -2,7 +2,7 @@
 
 /**
  * ---------------------------------------
- * create-vhost: Create a virtual host
+ * delete-vhost: Deletes a virtual host
  * ---------------------------------------
  * This file is part of Stackman.
  */

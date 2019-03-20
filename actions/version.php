@@ -2,7 +2,7 @@
 
 /**
  * ---------------------------------------
- * create-vhost: Create a virtual host
+ * version: Displays the Stackman version
  * ---------------------------------------
  * This file is part of Stackman.
  */

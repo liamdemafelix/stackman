@@ -2,7 +2,7 @@
 
 /**
  * ---------------------------------------
- * create-vhost: Create a virtual host
+ * issue-ssl: Issues an SSL Certificate
  * ---------------------------------------
  * This file is part of Stackman.
  */
