@@ -50,7 +50,7 @@ try {
 
 // Check if the action exists
 $action = $cli->arguments->get('action');
-$actions = glob("actions/*.php");
+$actions = glob(__DIR__ . DIRECTORY_SEPARATOR . "actions/*.php");
 if (!in_array("actions/{$action}.php", $actions)) {
     $cli->to('error')->red("Invalid action: {$action}");
     exit(1);
