@@ -75,7 +75,7 @@ mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
 mysql -e "FLUSH PRIVILEGES"
 
 # Install PHP 7.0, 7.1 and 7.2
-sudo /bin/yum install git php70-php php70-php-fpm php70-php-mysql php70-php-json php70-php-xml php70-php-mbstring php70-php-intl php70-php-zip zip unzip php70-php-curl php70-php-xmlrpc php70-php-soap php70-php-gd php70-php-imagick php70-php-redis php71-php php71-php-fpm php71-php-mysql php71-php-json php71-php-xml php71-php-mbstring php71-php-intl php71-php-zip zip unzip php71-php-curl php71-php-xmlrpc php71-php-soap php71-php-gd php71-php-imagick php71-php-redis php72-php php72-php-fpm php72-php-mysql php72-php-json php72-php-xml php72-php-mbstring php72-php-intl php72-php-zip zip unzip php72-php-curl php72-php-xmlrpc php72-php-soap php72-php-gd php72-php-imagick php72-php-redis -y
+sudo /bin/yum install nano git php70-php php70-php-fpm php70-php-mysql php70-php-json php70-php-xml php70-php-mbstring php70-php-intl php70-php-zip zip unzip php70-php-curl php70-php-xmlrpc php70-php-soap php70-php-gd php70-php-imagick php70-php-redis php71-php php71-php-fpm php71-php-mysql php71-php-json php71-php-xml php71-php-mbstring php71-php-intl php71-php-zip zip unzip php71-php-curl php71-php-xmlrpc php71-php-soap php71-php-gd php71-php-imagick php71-php-redis php72-php php72-php-fpm php72-php-mysql php72-php-json php72-php-xml php72-php-mbstring php72-php-intl php72-php-zip zip unzip php72-php-curl php72-php-xmlrpc php72-php-soap php72-php-gd php72-php-imagick php72-php-redis -y
 mkdir -p "/run/php/7.0"
 mkdir -p "/run/php/7.1"
 mkdir -p "/run/php/7.2"

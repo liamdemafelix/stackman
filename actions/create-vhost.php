@@ -130,6 +130,7 @@ exec("usermod -aG redis {$user}");
 // Create the directories
 exec("su {$user} -c 'mkdir -p /home/{$user}/{data,logs,www,acme-challenge}'");
 exec("su {$user} -c 'mkdir -p /home/{$user}/www/public'");
+exec("chmod 0751 /home/{$user}");
 exec("mkdir -p /etc/stackman/tmp");
 
 // Set variables
@@ -152,8 +153,8 @@ $variables = [
     "document_root" => "/home/{$user}/www/public",
     "user" => $user,
     "fpm_socket" => $fpmSocket,
-    "ssl_cert" => "/etc/stackman/tmp/{$domain}-fullchain.pem",
-    "ssl_key" => "/etc/stackman/tmp/{$domain}-privkey.pem"
+    "ssl_cert" => "/etc/stackman/{$domain}-fullchain.pem",
+    "ssl_key" => "/etc/stackman/{$domain}-privkey.pem"
 ];
 if (count($aliases) > 0) {
     $variables['server_alias_line'] = "ServerAlias {$aliases}";
@@ -161,6 +162,8 @@ if (count($aliases) > 0) {
 
 // Generate dummy SSL
 exec("openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /etc/stackman/tmp/{$domain}-privkey.pem -out /etc/stackman/tmp/{$domain}-fullchain.pem -subj \"/C=PE/ST=Lima/L=Lima/O=Acme Inc. /OU=IT Department/CN=acme.com\"");
+exec("ln -sf /etc/stackman/{$domain}-privkey.pem /etc/stackman/{$domain}-privkey.pem");
+exec("ln -sf /etc/stackman/{$domain}-fullchain.pem /etc/stackman/{$domain}-fullchain.pem");
 
 // Perform mode-specific actions
 if ($mode == 'LAMP') { // If mode is LAMP
@@ -185,7 +188,7 @@ if ($mode == 'LAMP') { // If mode is LAMP
     }
 
     // Write the PHP-FPM configuration file
-    file_put_contents($fpmSocket, $fpmTemplate);
+    file_put_contents("/etc/opt/remi/{$phpVersion}/php-fpm.d/{$user}.conf", $fpmTemplate);
 
     // Restart services
     exec("systemctl reload httpd");
