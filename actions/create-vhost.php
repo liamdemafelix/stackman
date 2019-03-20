@@ -156,7 +156,7 @@ $variables = [
     "ssl_cert" => "/etc/stackman/{$domain}-fullchain.pem",
     "ssl_key" => "/etc/stackman/{$domain}-privkey.pem"
 ];
-if (count($aliases) > 0) {
+if (strlen($aliases) > 0) {
     $variables['server_alias_line'] = "ServerAlias {$aliases}";
 }
 
