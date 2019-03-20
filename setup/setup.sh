@@ -94,6 +94,9 @@ sudo systemctl enable php71-php-fpm
 sudo systemctl enable php72-php-fpm
 
 # Add to firewall rules
+sudo /bin/yum install firewalld -y
+sudo systemctl start firewalld
+sudo systemctl enable firewalld
 sudo /bin/firewall-cmd --permanent --zone=public --add-service=http
 sudo /bin/firewall-cmd --permanent --zone=public --add-service=https
 sudo /bin/firewall-cmd --reload
