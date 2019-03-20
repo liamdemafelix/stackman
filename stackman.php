@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * -------------------------------------------------
+ * Stackman - a PHP-based stack manager for Linux
+ * -------------------------------------------------
+ * @author Liam Demafelix <hello@liam.ph>
+ * @uri https://github.com/liamdemafelix/stackman
+ */
+
+// Load Composer autoloader
+require_once 'vendor/autoload.php';
+
+// Load the CLI library and initialize
+$cli = new League\CLImate\CLImate;
+
+// Make sure exec() is allowed
+if (!function_exists('exec')) {
+    $cli->to('error')->red('Stackman needs the exec() function to work.');
+    exit(1);
+}
+
+// Make sure we're root
+if (exec('whoami') !==  'root') {
+    $cli->to('error')->red('Stackman needs to be run with root privileges.');
+    exit(1);
+}
+
+// Set the arguments
+$cli->arguments->add([
+    'action' => [
+        'prefix' => 'a',
+        'longPrefix' => 'action',
+        'description' => 'Defines what Stackman will do.',
+        'required' => true
+    ]
+]);
+
+// Parse the action
+try {
+    $cli->arguments->parse();
+} catch (League\CLImate\Exceptions\InvalidArgumentException $e) {
+    $cli->to('error')->red($e->getMessage());
+    exit(1);
+}
+
+// Check if the action exists
+$action = $cli->arguments->get('action');
+$actions = glob("actions/*.php");
+if (!in_array("actions/{$action}.php", $actions)) {
+    $cli->to('error')->red("Invalid action: {$action}");
+    exit(1);
+}
+
+// Require the action file
+require "actions/{$action}.php";

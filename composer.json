@@ -1,0 +1,6 @@
+{
+    "require": {
+        "league/climate": "^3.5",
+        "wixel/gump": "dev-master"
+    }
+}

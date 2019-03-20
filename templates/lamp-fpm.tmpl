@@ -1,0 +1,18 @@
+[%user%]
+listen = %fpm_socket%
+listen.owner = %user%
+listen.group = apache
+listen.mode = 0770
+user = %user%
+group = apache
+pm = dynamic
+pm.max_children = 6
+pm.start_servers = 3
+pm.min_spare_servers = 3
+pm.max_spare_servers = 5
+pm.max_requests = 500
+env[HOSTNAME] = \$HOSTNAME
+env[PATH] = /usr/local/bin:/usr/bin:/bin
+env[TMP] = /tmp
+env[TMPDIR] = /tmp
+env[TEMP] = /tmp
