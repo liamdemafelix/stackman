@@ -129,6 +129,7 @@ exec("usermod -aG redis {$user}");
 
 // Create the directories
 exec("su {$user} -c 'mkdir -p /home/{$user}/{data,logs,www,acme-challenge}'");
+exec("su {$user} -c 'mkdir -p /home/{$user}/www/public'");
 exec("mkdir -p /etc/stackman/tmp");
 
 // Set variables
