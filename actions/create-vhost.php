@@ -196,5 +196,20 @@ if ($mode == 'LAMP') { // If mode is LAMP
 
     // Done
     $cli->lightGreen()->out("Done. Please view the new access details below.");
+    $details = [
+        [
+            'Username',
+            'Password',
+            'Domain Name',
+            'Aliases'
+        ],
+        [
+            $user,
+            $password,
+            $domain,
+            $aliases
+        ]
+    ];
+    $cli->table($details);
 } elseif ($mode == 'proxy') { // If mode is Proxy
 }
