@@ -120,9 +120,9 @@ sudo /bin/yum install certbot python2-certbot-apache -y
 sudo git clone https://github.com/liamdemafelix/stackman.git /usr/local/stackman
 cd /usr/local/stackman
 composer install
-chmod +x stackman
 ln -s /usr/local/stackman/stackman /usr/local/bin/stackman
 chmod +x /usr/local/bin/stackman
+cd ~
 
 # Done
 echo -e "\nYour system has been successfully set up for Stackman. Your MySQL root password is saved in ~/.my.cnf. A reboot is now recommended."
