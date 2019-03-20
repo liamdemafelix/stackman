@@ -54,6 +54,7 @@ mv -f /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.stock
 wget https://github.com/liamdemafelix/stackman/raw/master/setup/apache/httpd.conf -O /etc/httpd/conf/httpd.conf
 sudo systemctl start httpd
 sudo systemctl enable httpd
+rm -f /etc/httpd/conf.d/welcome.conf
 
 # Install MySQL
 echo "+ Installing MySQL +"

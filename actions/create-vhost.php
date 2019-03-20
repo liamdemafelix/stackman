@@ -154,7 +154,8 @@ $variables = [
     "user" => $user,
     "fpm_socket" => $fpmSocket,
     "ssl_cert" => "/etc/stackman/{$domain}-fullchain.pem",
-    "ssl_key" => "/etc/stackman/{$domain}-privkey.pem"
+    "ssl_key" => "/etc/stackman/{$domain}-privkey.pem",
+    "proxy" => $proxy
 ];
 if (strlen($aliases) > 0) {
     $variables['server_alias_line'] = "ServerAlias {$aliases}";
@@ -162,8 +163,8 @@ if (strlen($aliases) > 0) {
 
 // Generate dummy SSL
 exec("openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /etc/stackman/tmp/{$domain}-privkey.pem -out /etc/stackman/tmp/{$domain}-fullchain.pem -subj \"/C=PE/ST=Lima/L=Lima/O=Acme Inc. /OU=IT Department/CN=acme.com\"");
-exec("ln -sf /etc/stackman/{$domain}-privkey.pem /etc/stackman/{$domain}-privkey.pem");
-exec("ln -sf /etc/stackman/{$domain}-fullchain.pem /etc/stackman/{$domain}-fullchain.pem");
+exec("ln -sf /etc/stackman/tmp/{$domain}-privkey.pem /etc/stackman/{$domain}-privkey.pem");
+exec("ln -sf /etc/stackman/tmp/{$domain}-fullchain.pem /etc/stackman/{$domain}-fullchain.pem");
 
 // Perform mode-specific actions
 if ($mode == 'LAMP') { // If mode is LAMP
@@ -193,23 +194,40 @@ if ($mode == 'LAMP') { // If mode is LAMP
     // Restart services
     exec("systemctl reload httpd");
     exec("systemctl restart {$phpVersion}-php-fpm");
-
-    // Done
-    $cli->lightGreen()->out("Done. Please view the new access details below.");
-    $details = [
-        [
-            'Username',
-            'Password',
-            'Domain Name',
-            'Aliases'
-        ],
-        [
-            $user,
-            $password,
-            $domain,
-            $aliases
-        ]
-    ];
-    $cli->table($details);
 } elseif ($mode == 'proxy') { // If mode is Proxy
+    // Create the apache virtual host file
+    if (!is_dir("/etc/httpd/vhosts.d")) {
+        exec("mkdir -p /etc/httpd/vhosts.d");
+    }
+
+    // Create the Apache Template File
+    $apacheTemplate = file_get_contents('templates/proxy-apache.tmpl');
+    foreach ($variables as $variable => $value) {
+        $apacheTemplate = str_replace("%{$variable}%", $value, $apacheTemplate);
+    }
+
+    // Write the Apache virtual host file
+    file_put_contents("/etc/httpd/vhosts.d/{$domain}.conf", $apacheTemplate);
+
+    // Restart services
+    exec("systemctl reload httpd");
 }
+
+// Done
+$cli->lightGreen()->out("Done. Please view the new access details below.");
+$details = [
+    [
+        'Username',
+        'Password',
+        'Domain Name',
+        'Aliases'
+    ],
+    [
+        $user,
+        $password,
+        $domain,
+        $aliases
+    ]
+];
+$cli->table($details);
+exit(0);
