@@ -61,20 +61,25 @@ sudo systemctl enable httpd
 
 # Install MySQL
 echo "+ Installing MySQL +"
-sudo /bin/yum install mysql mysql-server -y
-sudo systemctl start mysqld
-sudo systemctl enable mysqld
-mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PASSWORD}';"
+sudo /bin/yum install mysql mariadb-server -y
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+mysqladmin -u root password ${MYSQL_ROOT_PASSWORD}
 rm -f /root/.my.cnf
 cat > /root/.my.cnf <<EOL
 [client]
 user=root
 password="${MYSQL_ROOT_PASSWORD}"
 EOL
-mysql -u root -e "FLUSH PRIVILEGES;"
+chmod 600 /root/.my.cnf
+mysql -e "DELETE FROM mysql.user WHERE User=''"
+mysql -e "DROP DATABASE test" >/dev/null 2>&1
+mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
+mysql -e "FLUSH PRIVILEGES"
 
 # Install PHP 7.0, 7.1 and 7.2
-sudo /bin/yum install php70-php-fpm php70-php-mysql php70-php-json php70-php-xml php70-php-mbstring php70-php-intl php70-php-zip zip unzip php70-php-curl php70-php-xmlrpc php70-php-soap php70-php-gd php70-php-imagick php70-php-redis php71-php-fpm php71-php-mysql php71-php-json php71-php-xml php71-php-mbstring php71-php-intl php71-php-zip zip unzip php71-php-curl php71-php-xmlrpc php71-php-soap php71-php-gd php71-php-imagick php71-php-redis php72-php-fpm php72-php-mysql php72-php-json php72-php-xml php72-php-mbstring php72-php-intl php72-php-zip zip unzip php72-php-curl php72-php-xmlrpc php72-php-soap php72-php-gd php72-php-imagick php72-php-redis -y
+sudo /bin/yum install php70-php php70-php-fpm php70-php-mysql php70-php-json php70-php-xml php70-php-mbstring php70-php-intl php70-php-zip zip unzip php70-php-curl php70-php-xmlrpc php70-php-soap php70-php-gd php70-php-imagick php70-php-redis php71-php php71-php-fpm php71-php-mysql php71-php-json php71-php-xml php71-php-mbstring php71-php-intl php71-php-zip zip unzip php71-php-curl php71-php-xmlrpc php71-php-soap php71-php-gd php71-php-imagick php71-php-redis php72-php php72-php-fpm php72-php-mysql php72-php-json php72-php-xml php72-php-mbstring php72-php-intl php72-php-zip zip unzip php72-php-curl php72-php-xmlrpc php72-php-soap php72-php-gd php72-php-imagick php72-php-redis -y
 mkdir -p "/run/php/7.0"
 mkdir -p "/run/php/7.1"
 mkdir -p "/run/php/7.2"
@@ -102,5 +107,8 @@ sudo sed -i 's/\# unixsocket \/tmp\/redis.sock/unixsocket \/run\/redis\/redis.so
 sudo sed -i 's/\# unixsocketperm 700/unixsocketperm 770/g' /etc/redis.conf
 sudo systemctl restart redis
 
+# Install Certbot
+sudo /bin/yum install certbot python2-certbot-apache -y
+
 # Done
-echo -e "\nYour system has been successfully set up for Stackman."
+echo -e "\nYour system has been successfully set up for Stackman. Your MySQL root password is saved in ~/.my.cnf. A reboot is now recommended."
