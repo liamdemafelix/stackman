@@ -177,7 +177,7 @@ if ($mode == 'LAMP') { // If mode is LAMP
     }
 
     // Create the Apache Template File
-    $apacheTemplate = file_get_contents('templates/lamp-apache.tmpl');
+    $apacheTemplate = file_get_contents('/usr/local/stackman/templates/lamp-apache.tmpl');
     foreach ($variables as $variable => $value) {
         $apacheTemplate = str_replace("%{$variable}%", $value, $apacheTemplate);
     }
@@ -186,7 +186,7 @@ if ($mode == 'LAMP') { // If mode is LAMP
     file_put_contents("/etc/httpd/vhosts.d/{$domain}.conf", $apacheTemplate);
     
     // Create the PHP-FPM Template File
-    $fpmTemplate = file_get_contents('templates/lamp-fpm.tmpl');
+    $fpmTemplate = file_get_contents('/usr/local/stackman/templates/lamp-fpm.tmpl');
     foreach ($variables as $variable => $value) {
         $fpmTemplate = str_replace("%{$variable}%", $value, $fpmTemplate);
     }
@@ -204,7 +204,7 @@ if ($mode == 'LAMP') { // If mode is LAMP
     }
 
     // Create the Apache Template File
-    $apacheTemplate = file_get_contents('templates/proxy-apache.tmpl');
+    $apacheTemplate = file_get_contents('/usr/local/stackman/templates/proxy-apache.tmpl');
     foreach ($variables as $variable => $value) {
         $apacheTemplate = str_replace("%{$variable}%", $value, $apacheTemplate);
     }
