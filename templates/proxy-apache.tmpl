@@ -24,12 +24,16 @@
         ForceType text/plain
         RedirectMatch 404 "^(?!/\.well-known/acme-challenge/[\w-]{43}$)"
     </Directory>
-    <Directory "/home/%user%/www/public">
-        RewriteEngine On
-        RewriteCond %{HTTPS} off
-        RewriteCond %{REQUEST_URI} !^\/\.well-known\/.*$
-        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
-    </Directory>
+
+    # Uncomment the following <Directory></Directory> lines
+    # to force SSL.
+    #
+    #<Directory "/home/%user%/www/public">
+    #    RewriteEngine On
+    #    RewriteCond %{HTTPS} off
+    #    RewriteCond %{REQUEST_URI} !^\/\.well-known\/.*$
+    #    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+    #</Directory>
 </VirtualHost>
 
 <VirtualHost *:443>

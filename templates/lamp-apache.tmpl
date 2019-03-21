@@ -17,19 +17,12 @@
     ErrorLog /home/%user%/logs/%domain%_error.log
     CustomLog /home/%user%/logs/%domain%_access.log combined
 
-    # Force HTTPS, except Let's Encrypt's .well-known/acme-challenge request
     Alias /.well-known/acme-challenge/ /home/%user%/acme-challenge/
     <Directory "/home/%user%/acme-challenge/">
         Options None
         AllowOverride None
         ForceType text/plain
         RedirectMatch 404 "^(?!/\.well-known/acme-challenge/[\w-]{43}$)"
-    </Directory>
-    <Directory "/home/%user%/www/public">
-        RewriteEngine On
-        RewriteCond %{HTTPS} off
-        RewriteCond %{REQUEST_URI} !^\/\.well-known\/.*$
-        RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
     </Directory>
 
     <FilesMatch "\.php$">
