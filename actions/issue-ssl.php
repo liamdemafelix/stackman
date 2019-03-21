@@ -33,6 +33,13 @@ try {
 // Get the domain
 $domain = $cli->arguments->get('domain');
 
+// System IP
+$systemIP = exec('curl -4 icanhazip.com');
+if (!filter_var($systemIP, FILTER_VALIDATE_IP)) {
+    $cli->to('error')->red("Cannot retrieve system IP address.");
+    exit(1);
+}
+
 // Set the domains
 $domainArray = explode(",", $domain);
 $domains = "";
@@ -69,13 +76,6 @@ if (count($emailMatches) == 0) {
 $email = str_replace("# Email: ", "", $emailMatches[0]);
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $cli->to('error')->red('Invalid e-mail address. Virtual host metadata is probably corrupted.');
-    exit(1);
-}
-
-// System IP
-$systemIP = exec('curl -4 icanhazip.com');
-if (!filter_var($systemIP, FILTER_VALIDATE_IP)) {
-    $cli->to('error')->red("Cannot retrieve system IP address.");
     exit(1);
 }
 
