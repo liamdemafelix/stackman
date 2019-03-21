@@ -2,8 +2,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Please note that this software is in **alpha**. It does not YET contain validation for most parameters like domain, username, email and the like. Arguments are, however, escaped. Please do not use in production until a release with proper validation is available.
-
 Stackman is a stack manager for CentOS 7.x. It automatically sets up your server with:
 
 * Apache Web Server

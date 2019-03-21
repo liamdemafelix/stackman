@@ -32,7 +32,6 @@ try {
 
 // Get the domain
 $domain = $cli->arguments->get('domain');
-$preserve_homedir = $cli->arguments->defined('preserve_homedir');
 
 // Read the virtual host if it exists
 $vhost = "/etc/httpd/vhosts.d/{$domain}.conf";
@@ -49,12 +48,35 @@ if (count($emailMatches) == 0) {
     exit(1);
 }
 $email = str_replace("# Email: ", "", $emailMatches[0]);
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $cli->to('error')->red('Invalid e-mail address. Virtual host metadata is probably corrupted.');
+    exit(1);
+}
+
+// System IP
+$systemIP = exec('curl -4 icanhazip.com');
+if (!filter_var($systemIP, FILTER_VALIDATE_IP)) {
+    $cli->to('error')->red("Cannot retrieve system IP address.");
+    exit(1);
+}
 
 // Set the domains
 $domainArray = explode(",", $domain);
 $domains = "";
 foreach ($domainArray as $dom) {
-    $domains .= " -d {$dom}";
+    // Check if they're actually domains
+    if (!filter_var($dom, FILTER_VALIDATE_DOMAIN)) {
+        $cli->to('error')->red("{$dom} is an invalid domain.");
+        exit(1);
+    }
+    // Make sure the domains are pointing to our IP address
+    $domIP = gethostbyname($dom);
+    if ($domIP != $systemIP) {
+        $cli->to('error')->red("{$dom} ({$domIP}) is not pointing to the system IP address! Your system IP is {$systemIP}.");
+        exit(1);
+    } else {
+        $domains .= " -d {$dom}";
+    }
 }
 
 // Issue SSL Certificates via Certbot

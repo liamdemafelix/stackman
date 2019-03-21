@@ -95,10 +95,22 @@ if ($mode == 'proxy' && empty($proxy)) {
     $cli->to('error')->red('A proxy URL must be set if the mode is set to \'proxy\'.');
     exit(1);
 }
+if ($mode == 'proxy' && !empty($proxy)) {
+    if (!filter_var($proxy, FILTER_VALIDATE_URL)) {
+        $cli->to('error')->red("{$proxy} is an invalid URL.");
+        exit(1);
+    }
+}
 
 // Check if username exists
 if (is_dir("/home/{$user}")) {
     $cli->to('error')->red('The user \'' . $user . '\' already exists.');
+    exit(1);
+}
+
+// Check if email is valid
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $cli->to('error')->red("{$email} is an invalid e-mail address.");
     exit(1);
 }
 
@@ -118,9 +130,24 @@ if ($mode == 'LAMP') {
     }
 }
 
+// Validate domains
+$domains = explode(",", $domainList);
+$domain = $domains[0]; // Primary domain
+if (!filter_var($domain, FILTER_VALIDATE_DOMAIN)) {
+    $cli->to('error')->red("{$domain} is an invalid domain.");
+    exit(1);
+}
+$aliases = "";
+for ($x = 1; $x <= count($domains) - 1; $x++) {
+    if (!filter_var($domains[$x], FILTER_VALIDATE_DOMAIN)) {
+        $cli->to('error')->red("{$domain} is an invalid domain.");
+        exit(1);
+    }
+    $aliases .= "{$domains[$x]} "; // Include a space here, we'll trim that later.
+}
+
 // Generate passwords
 $password = substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(16))), 0, 16);
-$mysql_password = substr(str_replace(['+', '/', '='], '', base64_encode(random_bytes(16))), 0, 16);
 
 // Create the user
 exec("useradd -s /bin/bash -m -p \$(openssl passwd -1 {$password}) {$user}");
@@ -138,12 +165,6 @@ $fpmDirectory = "/run/php/{$php}/";
 $fpmSocket = $fpmDirectory . $user . ".sock";
 if (!is_dir($fpmDirectory)) {
     exec("mkdir -p {$fpmDirectory}");
-}
-$domains = explode(",", $domainList);
-$domain = $domains[0]; // Primary domain
-$aliases = "";
-for ($x = 1; $x <= count($domains) - 1; $x++) {
-    $aliases .= "{$domains[$x]} "; // Include a space here, we'll trim that later.
 }
 $aliases = trim($aliases);
 $variables = [
