@@ -33,8 +33,27 @@ try {
 // Get the domain
 $domain = $cli->arguments->get('domain');
 
+// Set the domains
+$domainArray = explode(",", $domain);
+$domains = "";
+foreach ($domainArray as $dom) {
+    // Check if they're actually domains
+    if (!filter_var($dom, FILTER_VALIDATE_DOMAIN)) {
+        $cli->to('error')->red("{$dom} is an invalid domain.");
+        exit(1);
+    }
+    // Make sure the domains are pointing to our IP address
+    $domIP = gethostbyname($dom);
+    if ($domIP != $systemIP) {
+        $cli->to('error')->red("{$dom} ({$domIP}) is not pointing to the system IP address! Your system IP is {$systemIP}.");
+        exit(1);
+    } else {
+        $domains .= " -d {$dom}";
+    }
+}
+
 // Read the virtual host if it exists
-$vhost = "/etc/httpd/vhosts.d/{$domain}.conf";
+$vhost = "/etc/httpd/vhosts.d/{$domainArray[0]}.conf";
 if (!is_file($vhost)) {
     $cli->to('error')->red('The virtual host configuration for ' . $domain . ' does not exist.');
     exit(1);
@@ -58,25 +77,6 @@ $systemIP = exec('curl -4 icanhazip.com');
 if (!filter_var($systemIP, FILTER_VALIDATE_IP)) {
     $cli->to('error')->red("Cannot retrieve system IP address.");
     exit(1);
-}
-
-// Set the domains
-$domainArray = explode(",", $domain);
-$domains = "";
-foreach ($domainArray as $dom) {
-    // Check if they're actually domains
-    if (!filter_var($dom, FILTER_VALIDATE_DOMAIN)) {
-        $cli->to('error')->red("{$dom} is an invalid domain.");
-        exit(1);
-    }
-    // Make sure the domains are pointing to our IP address
-    $domIP = gethostbyname($dom);
-    if ($domIP != $systemIP) {
-        $cli->to('error')->red("{$dom} ({$domIP}) is not pointing to the system IP address! Your system IP is {$systemIP}.");
-        exit(1);
-    } else {
-        $domains .= " -d {$dom}";
-    }
 }
 
 // Issue SSL Certificates via Certbot
