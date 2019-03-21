@@ -174,7 +174,7 @@ $variables = [
     "document_root" => "/home/{$user}/www/public",
     "user" => $user,
     "fpm_socket" => $fpmSocket,
-    "ssl_cert" => "/etc/stackman/{$domain}-fullchain.pem",
+    "ssl_cert" => "/etc/stackman/{$domain}-cert.pem",
     "ssl_key" => "/etc/stackman/{$domain}-privkey.pem",
     "proxy" => $proxy,
     "mode" => $mode,
@@ -186,9 +186,9 @@ if (strlen($aliases) > 0) {
 }
 
 // Generate dummy SSL
-exec("openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /etc/stackman/tmp/{$domain}-privkey.pem -out /etc/stackman/tmp/{$domain}-fullchain.pem -subj \"/C=PE/ST=Lima/L=Lima/O=Acme Inc. /OU=IT Department/CN=acme.com\"");
+exec("openssl req -x509 -nodes -days 7300 -newkey rsa:2048 -keyout /etc/stackman/tmp/{$domain}-privkey.pem -out /etc/stackman/tmp/{$domain}-cert.pem -subj \"/C=PE/ST=Lima/L=Lima/O=Acme Inc. /OU=IT Department/CN={$domain}\"");
 exec("ln -sf /etc/stackman/tmp/{$domain}-privkey.pem /etc/stackman/{$domain}-privkey.pem");
-exec("ln -sf /etc/stackman/tmp/{$domain}-fullchain.pem /etc/stackman/{$domain}-fullchain.pem");
+exec("ln -sf /etc/stackman/tmp/{$domain}-cert.pem /etc/stackman/{$domain}-cert.pem");
 
 // Perform mode-specific actions
 if ($mode == 'LAMP') { // If mode is LAMP

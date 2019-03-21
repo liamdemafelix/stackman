@@ -82,8 +82,8 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 // Issue SSL Certificates via Certbot
 exec("certbot --apache certonly {$domains} --rsa-key-size 4096 --non-interactive --agree-tos -m {$email} --cert-name {$domainArray[0]}");
 exec("ln -sf /etc/letsencrypt/live/{$domainArray[0]}/privkey.pem /etc/stackman/{$domainArray[0]}-privkey.pem");
-exec("ln -sf /etc/letsencrypt/live/{$domainArray[0]}/fullchain.pem /etc/stackman/{$domainArray[0]}-fullchain.pem");
-exec("sed -i '/SSLEngine On/a \ \ \ \ SSLCertificateChainFile \"\/etc\/letsencrypt\/live\/{$domainArray[0]}\/cert.pem\"' /etc/httpd/vhosts.d/{$domainArray[0]}.conf");
+exec("ln -sf /etc/letsencrypt/live/{$domainArray[0]}/cert.pem /etc/stackman/{$domainArray[0]}-cert.pem");
+exec("sed -i '/SSLEngine On/a \ \ \ \ SSLCertificateChainFile \"\/etc\/letsencrypt\/live\/{$domainArray[0]}\/fullchain.pem\"' /etc/httpd/vhosts.d/{$domainArray[0]}.conf");
 
 // Delete SSL Certificates
 exec("rm -f /etc/stackman/tmp/{$domain}-privkey.pem /etc/stackman/tmp/{$domain}-fullchain.pem");
