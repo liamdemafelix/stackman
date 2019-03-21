@@ -34,7 +34,7 @@ try {
 $domain = $cli->arguments->get('domain');
 
 // System IP
-$systemIP = exec('curl -4 icanhazip.com');
+$systemIP = exec('curl -4s icanhazip.com');
 if (!filter_var($systemIP, FILTER_VALIDATE_IP)) {
     $cli->to('error')->red("Cannot retrieve system IP address.");
     exit(1);
