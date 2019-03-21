@@ -52,6 +52,12 @@ sudo /bin/yum install httpd -y
 sudo /bin/mkdir -p /etc/httpd/vhosts.d
 mv -f /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.stock
 wget https://github.com/liamdemafelix/stackman/raw/master/setup/apache/httpd.conf -O /etc/httpd/conf/httpd.conf
+sed -i 's/SSLProtocol all/#SSLProtocol all/g' /etc/httpd/conf.d/ssl.conf
+sed -i 's/SSLCipherSuite HIGH/#SSLCipherSuite HIGH/g' /etc/httpd/conf.d/ssl.conf
+sed -i 's/#SSLHonorCipherOrder/SSLHonorCipherOrder/g' /etc/httpd/conf.d/ssl.conf
+sed -i '/SSLEngine on/a SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH' /etc/httpd/conf.d/ssl.conf
+sed -i '/SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH/a SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1' /etc/httpd/conf.d/ssl.conf
+sed -i '/SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1/a SSLCompression off' /etc/httpd/conf.d/ssl.conf
 sudo systemctl start httpd
 sudo systemctl enable httpd
 rm -f /etc/httpd/conf.d/welcome.conf
