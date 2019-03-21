@@ -44,8 +44,6 @@
     SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
     SSLHonorCipherOrder On
     SSLCompression off
-    SSLUseStapling on
-    SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 
     Alias /.well-known/acme-challenge/ /home/%user%/acme-challenge/
     <Directory "/home/%user%/acme-challenge/">

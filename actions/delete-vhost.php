@@ -94,6 +94,7 @@ if ($mode == "proxy") {
     exec("rm -f /etc/httpd/vhosts.d/{$domain}.conf");
 
     // If user dir is not preserved, delete it.
+    exec("pkill -u {$user}");
     if ($preserve_homedir) {
         exec("userdel {$user}");
     } else {
