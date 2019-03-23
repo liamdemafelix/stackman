@@ -28,12 +28,10 @@
     # Uncomment the following <Directory></Directory> lines
     # to force SSL.
     #
-    #<Directory "/home/%user%/www/public">
-    #    RewriteEngine On
-    #    RewriteCond %{HTTPS} off
-    #    RewriteCond %{REQUEST_URI} !^\/\.well-known\/.*$
-    #    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
-    #</Directory>
+    #RewriteEngine On
+    #RewriteCond %{HTTPS} off
+    #RewriteCond %{REQUEST_URI} !^\/\.well-known\/.*$
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -50,8 +48,7 @@
     SSLProtocol All -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
     SSLHonorCipherOrder On
     SSLCompression off
-    SSLUseStapling on
-    SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
+    SSLProxyEngine On
 
     ProxyPass /.well-known !
 
@@ -66,4 +63,5 @@
     ProxyPreserveHost On
     ProxyPass / %proxy%
     ProxyPassReverse / %proxy%
+    RequestHeader set X-Forwarded-Proto "https"
 </VirtualHost>
