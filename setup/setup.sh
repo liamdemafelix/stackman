@@ -89,12 +89,18 @@ mkdir -p "/run/php/7.2"
 sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.0\/php-fpm.sock/g' /etc/opt/remi/php70/php-fpm.d/www.conf
 sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.1\/php-fpm.sock/g' /etc/opt/remi/php71/php-fpm.d/www.conf
 sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.2\/php-fpm.sock/g' /etc/opt/remi/php72/php-fpm.d/www.conf
+sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.3\/php-fpm.sock/g' /etc/opt/remi/php73/php-fpm.d/www.conf
+sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.4\/php-fpm.sock/g' /etc/opt/remi/php74/php-fpm.d/www.conf
 sudo systemctl start php70-php-fpm
 sudo systemctl start php71-php-fpm
 sudo systemctl start php72-php-fpm
+sudo systemctl start php73-php-fpm
+sudo systemctl start php74-php-fpm
 sudo systemctl enable php70-php-fpm
 sudo systemctl enable php71-php-fpm
 sudo systemctl enable php72-php-fpm
+sudo systemctl enable php73-php-fpm
+sudo systemctl enable php74-php-fpm
 
 # Add PHP 7.2 as the system's default PHP
 sudo ln -s /opt/remi/php72/root/usr/bin/php /usr/bin/php
