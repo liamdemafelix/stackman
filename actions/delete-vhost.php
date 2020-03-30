@@ -89,19 +89,19 @@ if (0 == count($phpMatches)) {
 }
 $phpVersion = 'php'.str_replace('.', '', $php);
 
-if ('proxy' == $mode) {
+// If user dir is not preserved, delete it.
+exec("pkill -u {$user}");
+if ($preserve_homedir) {
+    exec("userdel {$user}", $output, $status);
+} else {
+    exec("userdel -r {$user}", $output, $status);
+}
+var_dump($output);
+var_dump($status);
+
+if ($mode == 'proxy') {
     // Delete the virtual host
     exec("rm -f /etc/httpd/vhosts.d/{$domain}.conf");
-
-    // If user dir is not preserved, delete it.
-    exec("pkill -u {$user}");
-    if ($preserve_homedir) {
-        exec("userdel {$user}", $output, $status);
-    } else {
-        exec("userdel -r {$user}", $output, $status);
-    }
-    var_dump($output);
-    var_dump($status);
 
     // Reload
     exec('systemctl reload httpd');
