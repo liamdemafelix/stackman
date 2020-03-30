@@ -96,10 +96,12 @@ if ('proxy' == $mode) {
     // If user dir is not preserved, delete it.
     exec("pkill -u {$user}");
     if ($preserve_homedir) {
-        exec("userdel {$user}");
+        exec("userdel {$user}", $output, $status);
     } else {
-        exec("userdel -r {$user}");
+        exec("userdel -r {$user}", $output, $status);
     }
+    var_dump($output);
+    var_dump($status);
 
     // Reload
     exec('systemctl reload httpd');
