@@ -106,11 +106,18 @@ if ($mode == 'proxy') {
 exec("pkill -u {$user}");
 $delCounter = 1;
 do {
-    $cli->out('Attempt #' . $delCounter . ' to delete user account');
+    $preserve = '';
+    if ($preserve_homedir) {
+        $preserve = ' (preserving home directory)';
+    }
+    $cli->out('Attempt #' . $delCounter . ' to delete user account' . $preserve);
     if ($preserve_homedir) {
         exec("userdel {$user}", $output, $status);
     } else {
         exec("userdel -r {$user}", $output, $status);
+    }
+    if ($status === 0) {
+        $cli->out('User account deleted');
     }
     $delCounter++;
     if ($delCounter >= 5 && $status != 0) {
