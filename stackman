@@ -13,7 +13,7 @@
 require_once 'vendor/autoload.php';
 
 // Set Stackman version
-$stackmanVersion = "1.0.4";
+$stackmanVersion = "1.0.5";
 
 // Load the CLI library and initialize
 $cli = new League\CLImate\CLImate;
