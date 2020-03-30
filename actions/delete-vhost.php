@@ -89,9 +89,22 @@ if (0 == count($phpMatches)) {
 }
 $phpVersion = 'php'.str_replace('.', '', $php);
 
+exec("systemctl stop httpd");
+if ($mode == 'proxy') {
+    // Delete the virtual host
+    exec("rm -f /etc/httpd/vhosts.d/{$domain}.conf");
+} else {
+    // Delete the virtual host
+    exec("rm -f /etc/httpd/vhosts.d/{$domain}.conf");
+
+    // Delete the FPM file
+    exec("systemctl stop {$phpVersion}-php-fpm");
+    exec("rm -f /etc/opt/remi/{$phpVersion}/php-fpm.d/{$user}.conf");
+}
+
 // If user dir is not preserved, delete it.
 exec("pkill -u {$user}");
-$delCounter = 0;
+$delCounter = 1;
 do {
     $cli->out('Attempt #' . $delCounter . ' to delete user account');
     if ($preserve_homedir) {
@@ -106,20 +119,9 @@ do {
     }
 } while ($status != 0);
 
-if ($mode == 'proxy') {
-    // Delete the virtual host
-    exec("rm -f /etc/httpd/vhosts.d/{$domain}.conf");
-
-    // Reload
-    exec('systemctl reload httpd');
-} else {
-    // Delete the virtual host
-    exec("rm -f /etc/httpd/vhosts.d/{$domain}.conf");
-    exec('systemctl reload httpd');
-
-    // Delete the FPM file
-    exec("systemctl stop {$phpVersion}-php-fpm");
-    exec("rm -f /etc/opt/remi/{$phpVersion}/php-fpm.d/{$user}.conf");
+// Start services
+exec("systemctl start httpd");
+if ($mode != 'proxy') {
     exec("systemctl start {$phpVersion}-php-fpm");
 }
 
