@@ -23,8 +23,8 @@ $cli->arguments->add([
         'prefix' => 'H',
         'longPrefix' => 'preserve-homedir',
         'description' => 'Preserves the user\'s home directory when the user is being deleted.',
-        'noValue' => true,
         'defaultValue' => false,
+        'noValue' => true,
     ],
 ]);
 
@@ -38,7 +38,7 @@ try {
 
 // Get the domain
 $domain = $cli->arguments->get('domain');
-$preserve_homedir = $cli->arguments->defined('preserve_homedir');
+$preserve_homedir = $cli->arguments->get('preserve_homedir');
 
 // Read the virtual host if it exists
 $vhost = "/etc/httpd/vhosts.d/{$domain}.conf";
