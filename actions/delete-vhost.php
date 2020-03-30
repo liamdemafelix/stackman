@@ -91,13 +91,20 @@ $phpVersion = 'php'.str_replace('.', '', $php);
 
 // If user dir is not preserved, delete it.
 exec("pkill -u {$user}");
-if ($preserve_homedir) {
-    exec("userdel {$user}", $output, $status);
-} else {
-    exec("userdel -r {$user}", $output, $status);
-}
-var_dump($output);
-var_dump($status);
+$delCounter = 0;
+do {
+    $cli->out('Attempt #' . $delCounter . ' to delete user account');
+    if ($preserve_homedir) {
+        exec("userdel {$user}", $output, $status);
+    } else {
+        exec("userdel -r {$user}", $output, $status);
+    }
+    $delCounter++;
+    if ($delCounter >= 5 && $status != 0) {
+        $cli->to('error')->red("Failed to delete user account: {$user} after 5 attempts. Please run userdel manually.");
+        $status = 0;
+    }
+} while ($status != 0);
 
 if ($mode == 'proxy') {
     // Delete the virtual host
