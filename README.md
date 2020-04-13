@@ -5,7 +5,7 @@
 Stackman is a stack manager for CentOS 7.x. It automatically sets up your server with:
 
 * Apache Web Server
-* Multiple PHP Versions via PHP-FPM (Versions 7.0, 7.1, 7.2 upon install, expandable. System default is set to PHP 7.2.)
+* Multiple PHP Versions via PHP-FPM (Versions 7.0, 7.1, 7.2, 7.3 and 7.4 upon install, expandable. System default is set to PHP 7.2.)
 * MariaDB
 * FirewallD
 * Redis Server (configured for socket access)
@@ -61,7 +61,7 @@ After the installer has finished, you can now access the `stackman` command via 
 
 Please feel free to fork Stackman and make pull requests. Follow the PSRs when writing your code, pull requests that do not comply with the PSRs will be rejected.
 
-Please report all non-security-related issues in the [issue tracker](https://github.com/liamdemafelix/stackman/issues). For security issues, please send them to [hello@liam.ph](mailto:hello@liam.ph).
+Please report all non-security-related issues in the [issue tracker](https://github.com/liamdemafelix/stackman/issues). For security issues, please send them to [hey@liam.ph](mailto:hey@liam.ph).
 
 ## License
 
