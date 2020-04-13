@@ -64,7 +64,14 @@ rm -f /etc/httpd/conf.d/welcome.conf
 
 # Install MySQL
 echo "+ Installing MySQL +"
-sudo /bin/yum install mysql mariadb-server -y
+cat >/etc/yum.repos.d/MariaDB.repo <<EOL
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.4/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOL
+sudo /bin/yum install MariaDB-server MariaDB-client -y
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 mysqladmin -u root password ${MYSQL_ROOT_PASSWORD}
@@ -81,11 +88,13 @@ mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 mysql -e "DELETE FROM mysql.user WHERE user='' or password='';"
 mysql -e "FLUSH PRIVILEGES"
 
-# Install PHP 7.0, 7.1 and 7.2
-sudo /bin/yum install nano git php70-php php70-php-fpm php70-php-mysql php70-php-json php70-php-xml php70-php-mbstring php70-php-intl php70-php-zip zip unzip php70-php-curl php70-php-xmlrpc php70-php-soap php70-php-gd php70-php-imagick php70-php-redis php71-php php71-php-fpm php71-php-mysql php71-php-json php71-php-xml php71-php-mbstring php71-php-intl php71-php-zip zip unzip php71-php-curl php71-php-xmlrpc php71-php-soap php71-php-gd php71-php-imagick php71-php-redis php72-php php72-php-fpm php72-php-mysql php72-php-json php72-php-xml php72-php-mbstring php72-php-intl php72-php-zip zip unzip php72-php-curl php72-php-xmlrpc php72-php-soap php72-php-gd php72-php-imagick php72-php-redis -y
+# Install PHP 7.0, 7.1, 7.2, 7.3 and 7.4
+sudo /bin/yum install nano git php70-php php70-php-fpm php70-php-mysql php70-php-json php70-php-xml php70-php-mbstring php70-php-intl php70-php-zip zip unzip php70-php-curl php70-php-xmlrpc php70-php-soap php70-php-gd php70-php-imagick php70-php-redis php71-php php71-php-fpm php71-php-mysql php71-php-json php71-php-xml php71-php-mbstring php71-php-intl php71-php-zip zip unzip php71-php-curl php71-php-xmlrpc php71-php-soap php71-php-gd php71-php-imagick php71-php-redis php72-php php72-php-fpm php72-php-mysql php72-php-json php72-php-xml php72-php-mbstring php72-php-intl php72-php-zip zip unzip php72-php-curl php72-php-xmlrpc php72-php-soap php72-php-gd php72-php-imagick php72-php-redis php73-php php73-php-fpm php73-php-mysql php73-php-json php73-php-xml php73-php-mbstring php73-php-intl php73-php-zip zip unzip php73-php-curl php73-php-xmlrpc php73-php-soap php73-php-gd php73-php-imagick php73-php-redis php74-php php74-php-fpm php74-php-mysql php74-php-json php74-php-xml php74-php-mbstring php74-php-intl php74-php-zip zip unzip php74-php-curl php74-php-xmlrpc php74-php-soap php74-php-gd php74-php-imagick php74-php-redis -y
 mkdir -p "/run/php/7.0"
 mkdir -p "/run/php/7.1"
 mkdir -p "/run/php/7.2"
+mkdir -p "/run/php/7.3"
+mkdir -p "/run/php/7.4"
 sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.0\/php-fpm.sock/g' /etc/opt/remi/php70/php-fpm.d/www.conf
 sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.1\/php-fpm.sock/g' /etc/opt/remi/php71/php-fpm.d/www.conf
 sed -i 's/listen = 127.0.0.1:9000/listen = \/run\/php\/7.2\/php-fpm.sock/g' /etc/opt/remi/php72/php-fpm.d/www.conf
@@ -105,8 +114,42 @@ sudo systemctl enable php74-php-fpm
 # Add PHP 7.2 as the system's default PHP
 sudo ln -s /opt/remi/php72/root/usr/bin/php /usr/bin/php
 
+# Set version-specific shortcuts
+ln -s /opt/remi/php70/root/usr/bin/php /usr/bin/php7.0
+ln -s /opt/remi/php71/root/usr/bin/php /usr/bin/php7.1
+ln -s /opt/remi/php72/root/usr/bin/php /usr/bin/php7.2
+ln -s /opt/remi/php73/root/usr/bin/php /usr/bin/php7.3
+ln -s /opt/remi/php74/root/usr/bin/php /usr/bin/php7.4
+
 # Install Composer
 curl -sS https://getcomposer.org/installer | sudo /usr/bin/php -- --install-dir=/usr/local/bin --filename=composer
+
+# Add composer aliases
+cat >/usr/local/bin/php7.0-composer <<EOL
+#!/bin/bash
+/usr/bin/php7.0 /usr/local/bin/composer $@
+EOL
+chmod +x /usr/local/bin/php7.0-composer
+cat >/usr/local/bin/php7.1-composer <<EOL
+#!/bin/bash
+/usr/bin/php7.1 /usr/local/bin/composer $@
+EOL
+chmod +x /usr/local/bin/php7.1-composer
+cat >/usr/local/bin/php7.2-composer <<EOL
+#!/bin/bash
+/usr/bin/php7.2 /usr/local/bin/composer $@
+EOL
+chmod +x /usr/local/bin/php7.2-composer
+cat >/usr/local/bin/php7.3-composer <<EOL
+#!/bin/bash
+/usr/bin/php7.3 /usr/local/bin/composer $@
+EOL
+chmod +x /usr/local/bin/php7.3-composer
+cat >/usr/local/bin/php7.4-composer <<EOL
+#!/bin/bash
+/usr/bin/php7.4 /usr/local/bin/composer $@
+EOL
+chmod +x /usr/local/bin/php7.4-composer
 
 # Add to firewall rules
 sudo /bin/yum install firewalld -y
